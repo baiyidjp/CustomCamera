@@ -17,6 +17,7 @@ typedef enum : NSUInteger {
     BUTTONTAG_CAMERA,//切换摄像头
     BUTTONTAG_TAKEPIC,//拍照
     BUTTONTAG_FLASH,//闪光灯
+    BUTTONTAG_CLOSE,//关闭
 } BUTTONTAG;
 
 @interface CustomCameraController ()
@@ -56,6 +57,10 @@ typedef enum : NSUInteger {
  *  拍照
  */
 @property(nonatomic,strong)UIButton *takePicBtn;
+/**
+ *  关闭
+ */
+@property(nonatomic,strong)UIButton *closeBtn;
 @end
 
 @implementation CustomCameraController
@@ -149,12 +154,17 @@ typedef enum : NSUInteger {
     [self.view addSubview:self.takePicBtn];
     
     self.flashBtnBtn = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.takePicBtn.frame), btnY, KWIDTH/3, btnH)];
-    [self.flashBtnBtn setTitle:@"闪光灯(关)" forState:UIControlStateNormal];
-    [self.flashBtnBtn setTitle:@"闪光灯(开)" forState:UIControlStateSelected];
+    [self.flashBtnBtn setTitle:@"闪光灯(Off)" forState:UIControlStateNormal];
     [self.flashBtnBtn.titleLabel setFont:[UIFont systemFontOfSize:15]];
     self.flashBtnBtn.tag = BUTTONTAG_FLASH;
     [self.flashBtnBtn addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.flashBtnBtn];
+    
+    self.closeBtn = [[UIButton alloc]initWithFrame:CGRectMake(10, 10, 50, 30)];
+    self.closeBtn.tag = BUTTONTAG_CLOSE;
+    [self.closeBtn setTitle:@"关闭" forState:UIControlStateNormal];
+    [self.closeBtn addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.closeBtn];
 }
 
 - (void)setSession{
@@ -162,6 +172,7 @@ typedef enum : NSUInteger {
     [self.view bringSubviewToFront:self.cameraBtn];
     [self.view bringSubviewToFront:self.flashBtnBtn];
     [self.view bringSubviewToFront:self.takePicBtn];
+    [self.view bringSubviewToFront:self.closeBtn];
     
     self.captureSession = [[AVCaptureSession alloc]init];
     /*  通常支持如下格式  分辨率
@@ -265,7 +276,9 @@ typedef enum : NSUInteger {
         case BUTTONTAG_FLASH:
             [self flashOnorClose];
             break;
-            
+        case BUTTONTAG_CLOSE:
+            [self dismissViewControllerAnimated:YES completion:nil];
+            break;
         default:
             break;
     }
@@ -343,22 +356,23 @@ typedef enum : NSUInteger {
     if (con1 && con2)
     {
         [self changeDevicePropertySafety:^(AVCaptureDevice *captureDevice) {
-            if (self.captureDevice.flashMode == AVCaptureFlashModeOn)         //闪光灯开
+            if (self.captureDevice.flashMode == AVCaptureFlashModeAuto)
             {
                 [self.captureDevice setFlashMode:AVCaptureFlashModeOff];
                 [self.captureDevice setTorchMode:AVCaptureTorchModeOff];
-            }else if (self.captureDevice.flashMode == AVCaptureFlashModeOff)  //闪光灯关
+                [self.flashBtnBtn setTitle:@"闪光灯(Off)" forState:UIControlStateNormal];
+            }else if (self.captureDevice.flashMode == AVCaptureFlashModeOff)
             {
                 [self.captureDevice setFlashMode:AVCaptureFlashModeOn];
                 [self.captureDevice setTorchMode:AVCaptureTorchModeOn];
+                [self.flashBtnBtn setTitle:@"闪光灯(On)" forState:UIControlStateNormal];
             }
-            else{                                                      //闪光灯自动
-                [self.captureDevice setFlashMode:AVCaptureFlashModeAuto];
+            else if (self.captureDevice.flashMode == AVCaptureFlashModeOn){                                                                    [self.captureDevice setFlashMode:AVCaptureFlashModeAuto];
                 [self.captureDevice setTorchMode:AVCaptureTorchModeAuto];
+                [self.flashBtnBtn setTitle:@"闪光灯(Auto)" forState:UIControlStateNormal];
             }
             NSLog(@"现在的闪光模式是AVCaptureFlashModeOn么?是你就扣1, %zd",self.captureDevice.flashMode == AVCaptureFlashModeOn);
         }];
-        self.flashBtnBtn.selected = !self.flashBtnBtn.selected;
     }else{
         NSLog(@"不能切换闪光模式");
     }
