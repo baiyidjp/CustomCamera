@@ -7,8 +7,10 @@
 //
 
 #import "ViewController.h"
+#import "CustomCameraController.h"
 
-@interface ViewController ()
+@interface ViewController ()<CustomCameraControllerDelegate>
+@property (weak, nonatomic) IBOutlet UIImageView *takeImageView;
 
 @end
 
@@ -22,6 +24,17 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+- (IBAction)clickBtn:(id)sender {
+    
+    CustomCameraController *ctrl = [[CustomCameraController alloc]init];
+    ctrl.delegate = self;
+    [self presentViewController:ctrl animated:YES completion:nil];
+}
+
+- (void)photoCapViewController:(UIViewController *)viewController didFinishWithImage:(UIImage *)image{
+    
+    self.takeImageView.image = image;
 }
 
 @end

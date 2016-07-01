@@ -15,6 +15,7 @@
 		A2B092101D265E6F008F8DA3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A2B0920E1D265E6F008F8DA3 /* LaunchScreen.storyboard */; };
 		A2B0921B1D265E6F008F8DA3 /* CustomCameraTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A2B0921A1D265E6F008F8DA3 /* CustomCameraTests.m */; };
 		A2B092261D265E6F008F8DA3 /* CustomCameraUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = A2B092251D265E6F008F8DA3 /* CustomCameraUITests.m */; };
+		A2B092351D265EFB008F8DA3 /* CustomCameraController.m in Sources */ = {isa = PBXBuildFile; fileRef = A2B092341D265EFB008F8DA3 /* CustomCameraController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,8 @@
 		A2B092211D265E6F008F8DA3 /* CustomCameraUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CustomCameraUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2B092251D265E6F008F8DA3 /* CustomCameraUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomCameraUITests.m; sourceTree = "<group>"; };
 		A2B092271D265E6F008F8DA3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A2B092331D265EFB008F8DA3 /* CustomCameraController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomCameraController.h; sourceTree = "<group>"; };
+		A2B092341D265EFB008F8DA3 /* CustomCameraController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomCameraController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +108,8 @@
 				A2B092041D265E6F008F8DA3 /* AppDelegate.m */,
 				A2B092061D265E6F008F8DA3 /* ViewController.h */,
 				A2B092071D265E6F008F8DA3 /* ViewController.m */,
+				A2B092331D265EFB008F8DA3 /* CustomCameraController.h */,
+				A2B092341D265EFB008F8DA3 /* CustomCameraController.m */,
 				A2B092091D265E6F008F8DA3 /* Main.storyboard */,
 				A2B0920C1D265E6F008F8DA3 /* Assets.xcassets */,
 				A2B0920E1D265E6F008F8DA3 /* LaunchScreen.storyboard */,
@@ -207,6 +212,7 @@
 				TargetAttributes = {
 					A2B091FC1D265E6F008F8DA3 = {
 						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = U37X4645WQ;
 					};
 					A2B092151D265E6F008F8DA3 = {
 						CreatedOnToolsVersion = 7.3;
@@ -273,6 +279,7 @@
 				A2B092081D265E6F008F8DA3 /* ViewController.m in Sources */,
 				A2B092051D265E6F008F8DA3 /* AppDelegate.m in Sources */,
 				A2B092021D265E6F008F8DA3 /* main.m in Sources */,
+				A2B092351D265EFB008F8DA3 /* CustomCameraController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -415,10 +422,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = CustomCamera/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dong.CustomCamera;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -426,10 +436,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = CustomCamera/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dong.CustomCamera;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
