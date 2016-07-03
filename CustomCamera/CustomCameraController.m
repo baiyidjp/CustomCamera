@@ -142,6 +142,7 @@ typedef enum : NSUInteger {
     [self.cameraBtn setTitle:@"切换前置摄像头" forState:UIControlStateNormal];
     [self.cameraBtn setTitle:@"切换后置摄像头" forState:UIControlStateSelected];
     [self.cameraBtn.titleLabel setFont:[UIFont systemFontOfSize:15]];
+    [self.cameraBtn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
     self.cameraBtn.tag = BUTTONTAG_CAMERA;
     [self.cameraBtn addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.cameraBtn];
@@ -149,6 +150,7 @@ typedef enum : NSUInteger {
     self.takePicBtn = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.cameraBtn.frame), btnY, KWIDTH/3, btnH)];
     [self.takePicBtn setTitle:@"拍照" forState:UIControlStateNormal];
     [self.takePicBtn.titleLabel setFont:[UIFont systemFontOfSize:15]];
+    [self.takePicBtn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
     self.takePicBtn.tag = BUTTONTAG_TAKEPIC;
     [self.takePicBtn addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.takePicBtn];
@@ -156,6 +158,7 @@ typedef enum : NSUInteger {
     self.flashBtnBtn = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetMaxX(self.takePicBtn.frame), btnY, KWIDTH/3, btnH)];
     [self.flashBtnBtn setTitle:@"闪光灯(Off)" forState:UIControlStateNormal];
     [self.flashBtnBtn.titleLabel setFont:[UIFont systemFontOfSize:15]];
+    [self.flashBtnBtn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
     self.flashBtnBtn.tag = BUTTONTAG_FLASH;
     [self.flashBtnBtn addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.flashBtnBtn];
@@ -163,6 +166,7 @@ typedef enum : NSUInteger {
     self.closeBtn = [[UIButton alloc]initWithFrame:CGRectMake(10, 10, 50, 30)];
     self.closeBtn.tag = BUTTONTAG_CLOSE;
     [self.closeBtn setTitle:@"关闭" forState:UIControlStateNormal];
+    [self.closeBtn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
     [self.closeBtn addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.closeBtn];
 }
@@ -303,12 +307,14 @@ typedef enum : NSUInteger {
         }
         NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
         UIImage *outImage = [UIImage imageWithData:imageData];
-        if ([self.delegate respondsToSelector:@selector(photoCapViewController:didFinishWithImage:)]) {
-            [self.delegate photoCapViewController:self didFinishWithImage:outImage];
-        }
+        
         UIImageWriteToSavedPhotosAlbum(outImage, self, nil, NULL);
         [self.captureSession stopRunning];
-        [self dismissViewControllerAnimated:YES completion:nil];
+        [self dismissViewControllerAnimated:YES completion:^{
+            if ([self.delegate respondsToSelector:@selector(photoCapViewController:didFinishWithImage:)]) {
+                [self.delegate photoCapViewController:self didFinishWithImage:outImage];
+            }
+        }];
     }];
 }
 
@@ -381,7 +387,7 @@ typedef enum : NSUInteger {
 
 //更改设备属性前一定要锁上
 -(void)changeDevicePropertySafety:(void (^)(AVCaptureDevice *captureDevice))propertyChange{
-    //也可以直接用_videoDevice,但是下面这种更好
+    
     AVCaptureDevice *captureDevice= [self.captureInput device];
     NSError *error;
     //注意改变设备属性前一定要首先调用lockForConfiguration:调用完之后使用unlockForConfiguration方法解锁,意义是---进行修改期间,先锁定,防止多处同时修改

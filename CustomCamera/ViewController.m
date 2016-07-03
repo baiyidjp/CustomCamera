@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "CustomCameraController.h"
+#import "ShowPhotoViewController.h"
 
 @interface ViewController ()<CustomCameraControllerDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *takeImageView;
@@ -34,7 +35,9 @@
 
 - (void)photoCapViewController:(UIViewController *)viewController didFinishWithImage:(UIImage *)image{
     
-    self.takeImageView.image = image;
+    ShowPhotoViewController *ctrl = [[ShowPhotoViewController alloc]init];
+    ctrl.image = image;
+    [self presentViewController:ctrl animated:YES completion:nil];
 }
 
 @end

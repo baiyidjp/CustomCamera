@@ -16,6 +16,7 @@
 		A2B0921B1D265E6F008F8DA3 /* CustomCameraTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A2B0921A1D265E6F008F8DA3 /* CustomCameraTests.m */; };
 		A2B092261D265E6F008F8DA3 /* CustomCameraUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = A2B092251D265E6F008F8DA3 /* CustomCameraUITests.m */; };
 		A2B092351D265EFB008F8DA3 /* CustomCameraController.m in Sources */ = {isa = PBXBuildFile; fileRef = A2B092341D265EFB008F8DA3 /* CustomCameraController.m */; };
+		F58AA4521D29505500F21A90 /* ShowPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F58AA4511D29505500F21A90 /* ShowPhotoViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,8 @@
 		A2B092271D265E6F008F8DA3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A2B092331D265EFB008F8DA3 /* CustomCameraController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomCameraController.h; sourceTree = "<group>"; };
 		A2B092341D265EFB008F8DA3 /* CustomCameraController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomCameraController.m; sourceTree = "<group>"; };
+		F58AA4501D29505500F21A90 /* ShowPhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowPhotoViewController.h; sourceTree = "<group>"; };
+		F58AA4511D29505500F21A90 /* ShowPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowPhotoViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +113,8 @@
 				A2B092071D265E6F008F8DA3 /* ViewController.m */,
 				A2B092331D265EFB008F8DA3 /* CustomCameraController.h */,
 				A2B092341D265EFB008F8DA3 /* CustomCameraController.m */,
+				F58AA4501D29505500F21A90 /* ShowPhotoViewController.h */,
+				F58AA4511D29505500F21A90 /* ShowPhotoViewController.m */,
 				A2B092091D265E6F008F8DA3 /* Main.storyboard */,
 				A2B0920C1D265E6F008F8DA3 /* Assets.xcassets */,
 				A2B0920E1D265E6F008F8DA3 /* LaunchScreen.storyboard */,
@@ -278,6 +283,7 @@
 			files = (
 				A2B092081D265E6F008F8DA3 /* ViewController.m in Sources */,
 				A2B092051D265E6F008F8DA3 /* AppDelegate.m in Sources */,
+				F58AA4521D29505500F21A90 /* ShowPhotoViewController.m in Sources */,
 				A2B092021D265E6F008F8DA3 /* main.m in Sources */,
 				A2B092351D265EFB008F8DA3 /* CustomCameraController.m in Sources */,
 			);
@@ -511,6 +517,7 @@
 				A2B0922C1D265E6F008F8DA3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A2B0922D1D265E6F008F8DA3 /* Build configuration list for PBXNativeTarget "CustomCameraTests" */ = {
 			isa = XCConfigurationList;
@@ -519,6 +526,7 @@
 				A2B0922F1D265E6F008F8DA3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A2B092301D265E6F008F8DA3 /* Build configuration list for PBXNativeTarget "CustomCameraUITests" */ = {
 			isa = XCConfigurationList;
@@ -527,6 +535,7 @@
 				A2B092321D265E6F008F8DA3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
