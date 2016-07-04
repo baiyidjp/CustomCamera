@@ -20,7 +20,7 @@ typedef enum : NSUInteger {
     BUTTONTAG_CLOSE,//关闭
 } BUTTONTAG;
 
-@interface CustomCameraController ()
+@interface CustomCameraController ()<UIGestureRecognizerDelegate>
 /**
  *  捕获设备(摄像头 音频...)
  */
@@ -61,6 +61,23 @@ typedef enum : NSUInteger {
  *  关闭
  */
 @property(nonatomic,strong)UIButton *closeBtn;
+/**
+ *  聚焦圈
+ */
+@property (nonatomic,weak) UIView *focusCircle;
+/**
+ *  手形图
+ */
+@property(nonatomic,strong)UIImageView * imageV;
+/**
+ *  记录开始的缩放比例
+ */
+@property(nonatomic,assign)CGFloat beginGestureScale;
+/**
+ *  最后的缩放比例
+ */
+@property(nonatomic,assign)CGFloat effectiveScale;
+
 @end
 
 @implementation CustomCameraController
@@ -69,7 +86,7 @@ typedef enum : NSUInteger {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor whiteColor];
-    
+    self.effectiveScale = self.beginGestureScale = 1.0f;
     [self configViews];
     [self getAuthorization];
 }
@@ -130,10 +147,27 @@ typedef enum : NSUInteger {
 
 - (void)configViews{
     
-    self.cameraView = [[UIView alloc]initWithFrame:self.view.bounds];
-    self.cameraView.backgroundColor = [UIColor orangeColor];
-    self.cameraView.layer.masksToBounds = YES;
-    [self.view addSubview:self.cameraView];
+//    self.cameraView = [[UIView alloc]initWithFrame:self.view.bounds];
+//    self.cameraView.backgroundColor = [UIColor orangeColor];
+//    self.cameraView.layer.masksToBounds = YES;
+//    [self.view addSubview:self.cameraView];
+    
+    UITapGestureRecognizer *oneTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(oneTap:)];
+    oneTap.numberOfTapsRequired = 1;
+    oneTap.delaysTouchesBegan = YES;
+    
+    UITapGestureRecognizer *twoTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(twoTap:)];
+    twoTap.numberOfTapsRequired = 2;
+    twoTap.delaysTouchesBegan = YES;
+    
+    UIPinchGestureRecognizer *pinch = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinchGesture:)];
+    pinch.delegate = self;
+    [self.view addGestureRecognizer:pinch];
+    
+    [oneTap requireGestureRecognizerToFail:twoTap];
+    
+    [self.view addGestureRecognizer:oneTap];
+//    [self.view addGestureRecognizer:twoTap];
     
     CGFloat btnH = 44;
     CGFloat btnY = KHEIGHT - btnH;
@@ -169,14 +203,14 @@ typedef enum : NSUInteger {
     [self.closeBtn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
     [self.closeBtn addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.closeBtn];
+    
+    // 手型图
+    self.imageV = [[UIImageView alloc] initWithFrame:self.view.bounds];
+    [self.view addSubview:self.imageV];
+//    self.imageV.image = [UIImage imageNamed:@"mianfeidai_shou"];
 }
 
 - (void)setSession{
-    
-    [self.view bringSubviewToFront:self.cameraBtn];
-    [self.view bringSubviewToFront:self.flashBtnBtn];
-    [self.view bringSubviewToFront:self.takePicBtn];
-    [self.view bringSubviewToFront:self.closeBtn];
     
     self.captureSession = [[AVCaptureSession alloc]init];
     /*  通常支持如下格式  分辨率
@@ -191,9 +225,9 @@ typedef enum : NSUInteger {
      AVAssetExportPresetAppleM4A
      )
      */
-    if ([self.captureSession canSetSessionPreset:AVAssetExportPreset640x480]) {
-        [self.captureSession setSessionPreset:AVAssetExportPreset640x480];
-    }
+//    if ([self.captureSession canSetSessionPreset:AVAssetExportPreset640x480]) {
+//        [self.captureSession setSessionPreset:AVAssetExportPreset640x480];
+//    }
     
     //获取输入设备
     /* MediaType
@@ -247,8 +281,13 @@ typedef enum : NSUInteger {
     self.previewLayer.frame = self.view.bounds;
     
     
-    [self.cameraView.layer addSublayer:self.previewLayer];
+    [self.view.layer addSublayer:self.previewLayer];
     
+    [self.view bringSubviewToFront:self.cameraBtn];
+    [self.view bringSubviewToFront:self.flashBtnBtn];
+    [self.view bringSubviewToFront:self.takePicBtn];
+    [self.view bringSubviewToFront:self.closeBtn];
+    [self.view bringSubviewToFront:self.imageV];
     
     [self.captureSession startRunning];
 }
@@ -288,6 +327,149 @@ typedef enum : NSUInteger {
     }
 }
 
+- (void)oneTap:(UITapGestureRecognizer *)oneTap{
+    
+    CGPoint point = [oneTap locationInView:self.view];
+    [self setFocusCirclePoint:point];
+    //聚焦 需要先锁定
+    [self changeDevicePropertySafety:^(AVCaptureDevice *captureDevice) {
+        /*
+         @constant AVCaptureFocusModeLocked 锁定在当前焦距
+         Indicates that the focus should be locked at the lens' current position.
+         
+         @constant AVCaptureFocusModeAutoFocus 自动对焦一次,然后切换到焦距锁定
+         Indicates that the device should autofocus once and then change the focus mode to AVCaptureFocusModeLocked.
+         
+         @constant AVCaptureFocusModeContinuousAutoFocus 当需要时.自动调整焦距
+         Indicates that the device should automatically focus when needed.
+         */
+        if ([captureDevice isFocusModeSupported:AVCaptureFocusModeContinuousAutoFocus]) {
+            [captureDevice setFocusMode:AVCaptureFocusModeContinuousAutoFocus];
+            NSLog(@"聚焦成功");
+        }else{
+            NSLog(@"聚焦失败");
+        }
+        //将手指点击的坐标转换成摄像头坐标
+        CGPoint focusPoint = [self.previewLayer pointForCaptureDevicePointOfInterest:point];
+        //设置聚焦点的位置
+        if ([captureDevice isFocusPointOfInterestSupported]) {
+            [captureDevice setFocusPointOfInterest:focusPoint];
+        }
+        /*
+         @constant AVCaptureExposureModeLocked  曝光锁定在当前值
+         Indicates that the exposure should be locked at its current value.
+         
+         @constant AVCaptureExposureModeAutoExpose 曝光自动调整一次然后锁定
+         Indicates that the device should automatically adjust exposure once and then change the exposure mode to AVCaptureExposureModeLocked.
+         
+         @constant AVCaptureExposureModeContinuousAutoExposure 曝光自动调整
+         Indicates that the device should automatically adjust exposure when needed.
+         
+         @constant AVCaptureExposureModeCustom 曝光只根据设定的值来
+         Indicates that the device should only adjust exposure according to user provided ISO, exposureDuration values.
+         
+         */
+        //设置曝光模式
+        if ([captureDevice isExposureModeSupported:AVCaptureExposureModeAutoExpose]) {
+            [captureDevice setExposureMode:AVCaptureExposureModeAutoExpose];
+            NSLog(@"曝光成功");
+        }else{
+            NSLog(@"曝光失败");
+        }
+        //设置曝光点
+        if ([captureDevice isExposurePointOfInterestSupported]) {
+            [captureDevice setExposurePointOfInterest:focusPoint];
+        }
+    }];
+}
+
+//调整焦距
+- (void)twoTap:(UITapGestureRecognizer *)twoTap{
+    
+    [self changeDevicePropertySafety:^(AVCaptureDevice *captureDevice) {
+        if (captureDevice.videoZoomFactor == 1.0) {
+            CGFloat current = 1.5;
+            if (current < captureDevice.activeFormat.videoMaxZoomFactor) {
+                [captureDevice rampToVideoZoomFactor:current withRate:10.0];
+            }
+        }else{
+            [captureDevice rampToVideoZoomFactor:1.0 withRate:10.0];
+        }
+    }];
+}
+
+//聚焦的光圈
+- (UIView *)focusCircle{
+    if (!_focusCircle) {
+        UIView *focusCircle = [[UIView alloc]init];
+        focusCircle.frame = CGRectMake(0, 0, 100, 100);
+        focusCircle.layer.cornerRadius = 50;
+        focusCircle.layer.borderColor = [UIColor orangeColor].CGColor;
+        focusCircle.layer.borderWidth = 2;
+        focusCircle.layer.masksToBounds = YES;
+        _focusCircle = focusCircle;
+        [self.view addSubview:focusCircle];
+    }
+    return _focusCircle;
+}
+
+//根据点击的point改变光圈的位置
+- (void)setFocusCirclePoint:(CGPoint)point{
+    
+    self.focusCircle.center = point;
+    self.focusCircle.transform = CGAffineTransformIdentity;
+    self.focusCircle.alpha = 1.0;
+    [UIView animateWithDuration:0.5 animations:^{
+        self.focusCircle.alpha = 0.0;
+        self.focusCircle.transform = CGAffineTransformMakeScale(0.5, 0.5);
+    }];
+}
+
+#pragma mark gestureRecognizer delegate
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+    if ( [gestureRecognizer isKindOfClass:[UIPinchGestureRecognizer class]] ) {
+        self.beginGestureScale = self.effectiveScale;
+    }
+    return YES;
+}
+
+//缩放手势 用于调整焦距
+- (void)handlePinchGesture:(UIPinchGestureRecognizer *)recognizer{
+    
+    //判断是否所有手势都是作用在预览图层界面上的
+    BOOL allTouchesAreOnThePreviewLayer = YES;
+    NSUInteger numTouches = [recognizer numberOfTouches], i;
+    for ( i = 0; i < numTouches; ++i ) {
+        CGPoint location = [recognizer locationOfTouch:i inView:self.view];
+        CGPoint convertedLocation = [self.previewLayer convertPoint:location fromLayer:self.previewLayer.superlayer];
+        if ( ! [self.previewLayer containsPoint:convertedLocation] ) {
+            allTouchesAreOnThePreviewLayer = NO;
+            break;
+        }
+    }
+    
+    if (allTouchesAreOnThePreviewLayer) {
+
+        self.effectiveScale = self.beginGestureScale * recognizer.scale;
+        if (self.effectiveScale < 1.0){
+            self.effectiveScale = 1.0;
+        }
+        NSLog(@"%f-------------->%f------------recognizerScale-%f",self.effectiveScale,self.beginGestureScale,recognizer.scale);
+        CGFloat maxScaleAndCropFactor = 2.0f;//[[self.stillImageOutput connectionWithMediaType:AVMediaTypeVideo] videoMaxScaleAndCropFactor];
+        if (self.effectiveScale > maxScaleAndCropFactor)
+            self.effectiveScale = maxScaleAndCropFactor;
+        
+        [self changeDevicePropertySafety:^(AVCaptureDevice *captureDevice) {
+            
+            [captureDevice rampToVideoZoomFactor:self.effectiveScale withRate:10.0];
+            
+        }];
+        
+    }
+    
+}
+
 //拍照
 - (void)takePicture{
     
@@ -307,12 +489,18 @@ typedef enum : NSUInteger {
         }
         NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
         UIImage *outImage = [UIImage imageWithData:imageData];
-        
-        UIImageWriteToSavedPhotosAlbum(outImage, self, nil, NULL);
+        //将人手图合成
+        UIGraphicsBeginImageContext(outImage.size);
+        [outImage drawInRect:CGRectMake(0, 0, outImage.size.width, outImage.size.height)];
+        [self.imageV.image drawInRect:CGRectMake(0, 0, outImage.size.width, outImage.size.height)];
+        UIImage *resultImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+
+        UIImageWriteToSavedPhotosAlbum(resultImage, self, nil, NULL);
         [self.captureSession stopRunning];
         [self dismissViewControllerAnimated:YES completion:^{
             if ([self.delegate respondsToSelector:@selector(photoCapViewController:didFinishWithImage:)]) {
-                [self.delegate photoCapViewController:self didFinishWithImage:outImage];
+                [self.delegate photoCapViewController:self didFinishWithImage:resultImage];
             }
         }];
     }];

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A21E2FB31D2A352800A28095 /* mianfeidai_shou@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A21E2FB11D2A352800A28095 /* mianfeidai_shou@2x.png */; };
+		A21E2FB41D2A352800A28095 /* mianfeidai_shou@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A21E2FB21D2A352800A28095 /* mianfeidai_shou@3x.png */; };
 		A2B092021D265E6F008F8DA3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A2B092011D265E6F008F8DA3 /* main.m */; };
 		A2B092051D265E6F008F8DA3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A2B092041D265E6F008F8DA3 /* AppDelegate.m */; };
 		A2B092081D265E6F008F8DA3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A2B092071D265E6F008F8DA3 /* ViewController.m */; };
@@ -37,6 +39,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A21E2FB11D2A352800A28095 /* mianfeidai_shou@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mianfeidai_shou@2x.png"; sourceTree = "<group>"; };
+		A21E2FB21D2A352800A28095 /* mianfeidai_shou@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mianfeidai_shou@3x.png"; sourceTree = "<group>"; };
 		A2B091FD1D265E6F008F8DA3 /* CustomCamera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CustomCamera.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A2B092011D265E6F008F8DA3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		A2B092031D265E6F008F8DA3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -107,6 +111,8 @@
 		A2B091FF1D265E6F008F8DA3 /* CustomCamera */ = {
 			isa = PBXGroup;
 			children = (
+				A21E2FB11D2A352800A28095 /* mianfeidai_shou@2x.png */,
+				A21E2FB21D2A352800A28095 /* mianfeidai_shou@3x.png */,
 				A2B092031D265E6F008F8DA3 /* AppDelegate.h */,
 				A2B092041D265E6F008F8DA3 /* AppDelegate.m */,
 				A2B092061D265E6F008F8DA3 /* ViewController.h */,
@@ -254,8 +260,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A21E2FB31D2A352800A28095 /* mianfeidai_shou@2x.png in Resources */,
 				A2B092101D265E6F008F8DA3 /* LaunchScreen.storyboard in Resources */,
 				A2B0920D1D265E6F008F8DA3 /* Assets.xcassets in Resources */,
+				A21E2FB41D2A352800A28095 /* mianfeidai_shou@3x.png in Resources */,
 				A2B0920B1D265E6F008F8DA3 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
