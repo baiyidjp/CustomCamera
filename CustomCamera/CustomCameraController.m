@@ -102,26 +102,26 @@ typedef enum : NSUInteger {
                     [self setSession];
                     return;
                 } else {        //用户拒绝授权
+                    [self dismissViewControllerAnimated:YES completion:nil];
                     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"出错了"
                                                                         message:@"用户拒绝授权摄像头的使用权,返回上一页.请打开\n设置-->隐私/通用等权限设置"
                                                                        delegate:nil
                                                               cancelButtonTitle:@"确定"
                                                               otherButtonTitles:nil];
                     [alertView show];
-                    [self dismissViewControllerAnimated:YES completion:nil];
                 }
             }];
             break;
         }
         default:                                    //用户拒绝授权/未授权
         {
+            [self dismissViewControllerAnimated:YES completion:nil];
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"出错了"
                                                                 message:@"拒绝授权,返回上一页.请检查下\n设置-->隐私/通用等权限设置"
                                                                delegate:nil
                                                       cancelButtonTitle:@"确定"
                                                       otherButtonTitles:nil];
             [alertView show];
-            [self dismissViewControllerAnimated:YES completion:nil];
             break;
         }
     }
