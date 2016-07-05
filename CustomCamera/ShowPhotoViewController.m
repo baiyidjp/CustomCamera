@@ -22,16 +22,42 @@
     imageV.image = self.image;
     [self.view addSubview:imageV];
     
-    UIButton *closeBtn = [[UIButton alloc]initWithFrame:CGRectMake(10, 10, 50, 30)];
+    UIButton *closeBtn = [[UIButton alloc]initWithFrame:CGRectMake(10, 20, 50, 30)];
     [closeBtn setTitle:@"关闭" forState:UIControlStateNormal];
     [closeBtn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
     [closeBtn addTarget:self action:@selector(clickBtn) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:closeBtn];
+    
+    UIButton *saveBtn = [[UIButton alloc]initWithFrame:CGRectMake(10, [UIScreen mainScreen].bounds.size.height - 40, 50, 30)];
+    [saveBtn setTitle:@"保存" forState:UIControlStateNormal];
+    [saveBtn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+    [saveBtn addTarget:self action:@selector(saveBtn) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:saveBtn];
 }
 - (void)clickBtn{
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (void)saveBtn{
+    
+    UIImageWriteToSavedPhotosAlbum(self.image, self, @selector(image:didFinishSavingWithError:contextInfo:), NULL);
+}
+// 指定回调方法
+
+- (void)image: (UIImage *)image didFinishSavingWithError: (NSError *) error contextInfo: (void *) contextInfo{
+
+    NSString *msg = nil ;
+    if(error != NULL){
+        msg = @"保存图片失败" ;
+    }else{
+        msg = @"保存图片成功" ;
+    }
+    
+    UIAlertController *alertC = [UIAlertController alertControllerWithTitle:nil message:msg preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:nil];
+    [alertC addAction:cancelAction];
+    [self presentViewController:alertC animated:YES completion:nil];
+}
 /*
 #pragma mark - Navigation
 

@@ -197,7 +197,7 @@ typedef enum : NSUInteger {
     [self.flashBtnBtn addTarget:self action:@selector(clickBtn:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.flashBtnBtn];
     
-    self.closeBtn = [[UIButton alloc]initWithFrame:CGRectMake(10, 10, 50, 30)];
+    self.closeBtn = [[UIButton alloc]initWithFrame:CGRectMake(10, 20, 50, 30)];
     self.closeBtn.tag = BUTTONTAG_CLOSE;
     [self.closeBtn setTitle:@"关闭" forState:UIControlStateNormal];
     [self.closeBtn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
@@ -496,7 +496,6 @@ typedef enum : NSUInteger {
         UIImage *resultImage = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
 
-        UIImageWriteToSavedPhotosAlbum(resultImage, self, nil, NULL);
         [self.captureSession stopRunning];
         [self dismissViewControllerAnimated:YES completion:^{
             if ([self.delegate respondsToSelector:@selector(photoCapViewController:didFinishWithImage:)]) {

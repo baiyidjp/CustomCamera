@@ -11,7 +11,6 @@
 #import "ShowPhotoViewController.h"
 
 @interface ViewController ()<CustomCameraControllerDelegate>
-@property (weak, nonatomic) IBOutlet UIImageView *takeImageView;
 
 @end
 
