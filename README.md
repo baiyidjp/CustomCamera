@@ -1,3 +1,3 @@
 # CustomCamera     
 自定义照相   
-![Alt Text](http://www.sheawong.com/wp-content/uploads/2013/08/keephatin.gif)
+![Alt Text](http://pan.baidu.com/disk/home#list/path=%2Fios%20github%20image)
